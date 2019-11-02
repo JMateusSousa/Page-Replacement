@@ -1,51 +1,51 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
 
 
 	public static void main(String[] args){
 
-
-		int numero_quadros = 0;
-		List<Inputs> sequencia_referencia = new ArrayList<>();
-		List<Inputs> sequencia_referencia_otm = new ArrayList<>();
+		int Q1 = 0, Q2 = 0;
+		List<Inputs> listPages = new ArrayList<>();
+		ArrayList listMode = new ArrayList<>();
+		File file = new File("src/input_test.txt");
 
 		try {
-			
-		    BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
-		    String valor;
-		    numero_quadros = Integer.parseInt(entrada.readLine());
-			
+			Scanner inputPrompt = new Scanner(new InputStreamReader(System.in));
+			String buffer = inputPrompt.next();
+			Q1 = Integer.parseInt(buffer.substring(0, buffer.indexOf(',')));
+			Q2 = Integer.parseInt(buffer.substring(buffer.indexOf(',') + 1, buffer.length()));
+			Scanner inputFile = new Scanner(new FileReader(file));
+			inputFile.useDelimiter("-");
+		    String page, mode;
 		    while(true) {
-				valor = entrada.readLine();
-				if (valor != null && valor.length() != 0)
-					sequencia_referencia.add(new Inputs(Integer.parseInt(valor)));
+				if (inputFile.hasNext()){
+					page = inputFile.next();
+					mode = page.substring(page.length() - 1);
+					page = page.substring(0, page.length() - 1);
+					listPages.add(new Inputs(Integer.parseInt(page)));
+					listMode.add(mode);
+				}
 				else {
 					break;
 				}
-		    }
+			}
 
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 		    e.getMessage();
-		      
-		}
-	
-		for(int i = 0; i < sequencia_referencia.size() ; i++){
-
-			sequencia_referencia_otm.add(sequencia_referencia.get(i));
 		}
 
-		Algorithms fifo = new Algorithms(numero_quadros);
-		Algorithms mru = new Algorithms(numero_quadros);
-	
-
-		fifo.FIFO(sequencia_referencia);
-		//otm.OTM(sequencia_referencia_otm);
-		mru.MRU(sequencia_referencia);
+		//System.out.println(listMode);
+		for(int i = Q1; i <= Q2 ; i++) {
+			Algorithms fifo = new Algorithms(i);
+			Algorithms mru = new Algorithms(i);
+			fifo.FIFO(listPages);
+			mru.MRU(listPages);
+		}
 	}
 }
 
