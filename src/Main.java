@@ -1,16 +1,3 @@
-/******************************************
-*Universidade Federal da Paraíba - UFPB
-*Centro de Informática - CI
-*
-*Sistemas Operacionais 1 - 2016.2
-*
-*Aluno: Matheus Maranhão Rêgo Praxedes
-*Matrícula: 11403744
-*
-*Trabalho 2
-*Data de entrega: 21/05/2017
-*******************************************/
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
