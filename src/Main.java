@@ -1,3 +1,5 @@
+import org.jfree.ui.RefineryUtilities;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -5,13 +7,15 @@ import java.util.Scanner;
 
 public class Main {
 
-
 	public static void main(String[] args){
 
 		int Q1 = 0, Q2 = 0;
 		List<Inputs> listPages = new ArrayList<>();
 		ArrayList listMode = new ArrayList<>();
 		File file = new File("src/input_test.txt");
+		List<ArrayList<ChartPoint>> chartPoints = new ArrayList<>();
+		ArrayList<ChartPoint> chartPointsFIFO = new ArrayList<>();
+		ArrayList<ChartPoint> chartPointsMRU = new ArrayList<>();
 
 		try {
 			Scanner inputPrompt = new Scanner(new InputStreamReader(System.in));
@@ -43,9 +47,16 @@ public class Main {
 		for(int i = Q1; i <= Q2 ; i++) {
 			Algorithms fifo = new Algorithms(i);
 			Algorithms mru = new Algorithms(i);
-			fifo.FIFO(listPages);
-			mru.MRU(listPages);
+			chartPointsFIFO.add(new ChartPoint(i, fifo.FIFO(listPages)));
+			chartPointsMRU.add(new ChartPoint(i, mru.MRU(listPages)));
 		}
+
+		chartPoints.add(chartPointsFIFO);
+		chartPoints.add(chartPointsMRU);
+		GenerateChart demo = new GenerateChart("Algoritmos de substituição de páginas", chartPoints);
+		demo.pack();
+		RefineryUtilities.centerFrameOnScreen(demo);
+		demo.setVisible(true);
 	}
 }
 

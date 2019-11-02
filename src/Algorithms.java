@@ -16,7 +16,7 @@ public class Algorithms {
     }
 
 
-    public void FIFO(List<Inputs> list){
+    public int FIFO(List<Inputs> list){
         int insert = 0;
         this.frames = new ArrayList<>();
 
@@ -49,9 +49,10 @@ public class Algorithms {
         }
         System.out.print("FIFO: Misses -> " + numMisses + " | Hits -> " + numHits);
         System.out.println(" | Frames -> " + frames);
+        return numHits;
     }
 
-    public void MRU(List<Inputs> list){
+    public int MRU(List<Inputs> list){
 
         boolean aux = false;
         ArrayList<Inputs> queue = new ArrayList<>(numFrames);
@@ -101,7 +102,7 @@ public class Algorithms {
 
         System.out.print("MRU: Misses -> " + numMisses + " | Hits -> " + numHits);
         System.out.println(" | Fila -> " + queue);
-
+        return numHits;
     }
 
 

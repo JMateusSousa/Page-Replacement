@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -10,6 +12,7 @@ import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.ui.RectangleInsets;
+import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -18,9 +21,9 @@ import org.jfree.ui.RefineryUtilities;
 
 public class GenerateChart extends ApplicationFrame {
 
-    public GenerateChart(String title) {
+    public GenerateChart(String title, List<ArrayList<ChartPoint>> chartPoints) {
         super(title);
-        XYDataset dataset = createDataset();
+        XYDataset dataset = createDataset(chartPoints);
         JFreeChart chart = createChart(dataset);
         ChartPanel chartPanel = new ChartPanel(chart, false);
         chartPanel.setPreferredSize(new java.awt.Dimension(700, 400));
@@ -67,24 +70,22 @@ public class GenerateChart extends ApplicationFrame {
         return chart;
     }
 
-    private static XYDataset createDataset() {
+    private static XYDataset createDataset(List<ArrayList<ChartPoint>> chartPoints) {
         XYSeriesCollection dataset = new XYSeriesCollection();
-        XYSeries series1 = new XYSeries("L&G European Index Trust");
-        series1.add(18, 530);
-        series1.add(20, 580);
-        series1.add(25, 740);
-        series1.add(30, 901);
-        series1.add(40, 1300);
-        series1.add(50, 2219);
+        XYSeries series1 = new XYSeries("FIFO");
+        XYSeries series2 = new XYSeries("MRU");
+        ArrayList<XYSeries> series = new ArrayList<>();
+        series.add(series1);
+        series.add(series2);
+        int i = 0;
+        for(ArrayList line: chartPoints){
+            ArrayList<ChartPoint> line1 = line;
+            for(ChartPoint item: line1){
+                series.get(i).add(new XYDataItem(item.getNumFrames(), item.getNumHits()));
+            }
+            i++;
+        }
 
-
-        XYSeries series2 = new XYSeries("2016");
-        series2.add(18, 567);
-        series2.add(20, 612);
-        series2.add(25, 800);
-        series2.add(30, 980);
-        series2.add(40, 1210);
-        series2.add(50, 2350);
         dataset.addSeries(series1);
         dataset.addSeries(series2);
 
@@ -92,18 +93,9 @@ public class GenerateChart extends ApplicationFrame {
 
     }
 
-    public static JPanel createDemoPanel() {
-        JFreeChart chart = createChart(createDataset());
+    public static JPanel createDemoPanel(List<ArrayList<ChartPoint>>chartPoints) {
+        JFreeChart chart = createChart(createDataset(chartPoints));
         return new ChartPanel(chart);
-    }
-
-    public static void main(String[] args) {
-
-        GenerateChart demo = new GenerateChart("Algoritmos de substituição de páginas");
-        demo.pack();
-        RefineryUtilities.centerFrameOnScreen(demo);
-        demo.setVisible(true);
-
     }
 
 }
