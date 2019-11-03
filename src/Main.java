@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javax.swing.JFrame;
 
 public class Main {
 
@@ -51,12 +52,13 @@ public class Main {
 			chartPointsMRU.add(new ChartPoint(i, mru.MRU(listPages)));
 		}
 
+		GenerateTable table = new GenerateTable(Q2 - Q1, Q1, chartPointsFIFO, chartPointsMRU);
 		chartPoints.add(chartPointsFIFO);
 		chartPoints.add(chartPointsMRU);
-		GenerateChart demo = new GenerateChart("Algoritmos de substituição de páginas", chartPoints);
-		demo.pack();
-		RefineryUtilities.centerFrameOnScreen(demo);
-		demo.setVisible(true);
+		GenerateChart chart = new GenerateChart("Algoritmos de substituição de páginas", chartPoints);
+		chart.pack();
+		RefineryUtilities.centerFrameOnScreen(chart);
+		chart.setVisible(true);
 	}
 }
 
