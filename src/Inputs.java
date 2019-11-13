@@ -1,6 +1,24 @@
 public class Inputs {
 
 	private int valor;
+	private boolean bitR = true;
+	private boolean mode;
+
+	public boolean isBitR() {
+		return bitR;
+	}
+
+	public void setBitR(boolean bitR) {
+		this.bitR = bitR;
+	}
+
+	public boolean isMode() {
+		return mode;
+	}
+
+	public void setMode(boolean mode) {
+		this.mode = mode;
+	}
 
 	public Inputs(int valor){
 

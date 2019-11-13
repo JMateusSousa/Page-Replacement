@@ -218,7 +218,7 @@ public class Algorithms {
         }
     }*/
 
-    /*public static void opt(BufferedReader br) throws IOException {
+    /*public void opt(BufferedReader br) throws IOException {
         ArrayList<String> table = new ArrayList<>();
         ArrayList<String> mem = new ArrayList<>();
         BufferedReader second = new BufferedReader(new FileReader(trace));
@@ -298,5 +298,68 @@ public class Algorithms {
             memaccess++;
         }
     }*/
+
+    public int secondChance(List<Inputs> list, int numReferences) {
+        this.frames = new ArrayList<>();
+
+        //  percorre toda a lista de números das páginas
+        for(int i = 0; i < list.size(); i++) {
+            if(list.size() % numReferences == 0){
+                for(Inputs frame: frames){
+                    frame.setBitR(false);
+                }
+            }
+            Inputs numPage = list.get(i);
+            boolean found = false;
+            int j;
+
+            //  verifica se a página está carregada em algum frame
+            for (j = 0; j < frames.size(); j++) {
+                if ((frames.get(j).getValor() == numPage.getValor())) {
+                    found = true;
+                    break;
+                }
+            }
+
+            //  se não estiver carregado
+            if(!found){
+                // verifica se todos os frames já foram carregados
+                // se sim, carrega a página sem ocorrer remoção
+                if (frames.size() < numFrames) {
+                    frames.add(numPage);
+                    numMisses++;
+                    continue;
+                }
+                //  se não, remove a primeira página da fila
+                //  que tiver o bitR igual a zero
+                else {
+                    for (int k = 0; k < numFrames; k++) {
+                        if(frames.get(k).isBitR() == true) {
+                            Inputs frame = frames.get(k);
+                            frame.setBitR(false);
+                            frames.remove(k);
+                            frames.add(frame);
+                        }else {
+                            frames.remove(k);
+                            frames.add(numPage);
+                            numMisses++;
+                            break;
+                        }
+                    }
+                }
+            }
+            // se a página já estiver carregada
+            else {
+                numHits++;
+                Inputs foundFrame = frames.get(j);
+                foundFrame.setBitR(true);
+                frames.remove(j);
+                frames.add(foundFrame);
+            }
+        }
+        System.out.print("Segunda Chance: Misses -> " + numMisses + " | Hits -> " + numHits);
+        System.out.println(" | Fila -> " + frames);
+        return numHits;
+    }
 
 }
