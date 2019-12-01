@@ -304,7 +304,8 @@ public class Algorithms {
 
         //  percorre toda a lista de números das páginas
         for(int i = 0; i < list.size(); i++) {
-            if(list.size() % numReferences == 0){
+            // verifica se chegou na zerésima página
+            if(i % numReferences == 0){
                 for(Inputs frame: frames){
                     frame.setBitR(false);
                 }
@@ -334,6 +335,7 @@ public class Algorithms {
                 //  que tiver o bitR igual a zero
                 else {
                     for (int k = 0; k < numFrames; k++) {
+                        //  verifica se o página contém bitR igual a 1
                         if(frames.get(k).isBitR() == true) {
                             Inputs frame = frames.get(k);
                             frame.setBitR(false);
@@ -351,10 +353,7 @@ public class Algorithms {
             // se a página já estiver carregada
             else {
                 numHits++;
-                Inputs foundFrame = frames.get(j);
-                foundFrame.setBitR(true);
-                frames.remove(j);
-                frames.add(foundFrame);
+                frames.get(j).setBitR(true);
             }
         }
         System.out.print("Segunda Chance: Misses -> " + numMisses + " | Hits -> " + numHits);
