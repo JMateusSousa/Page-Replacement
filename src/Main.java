@@ -7,11 +7,11 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 
 public class Main {
-
+	private static List<Inputs> listPages;
 	public static void main(String[] args){
 
 		int Q1 = 0, Q2 = 0, numReferences = 0;
-		List<Inputs> listPages = new ArrayList<>();
+		listPages = new ArrayList<>();
 		ArrayList listMode = new ArrayList<>();
 		File file = new File("src/input_test.txt");
 		List<ArrayList<ChartPoint>> chartPoints = new ArrayList<>();
@@ -50,16 +50,17 @@ public class Main {
 
 		//System.out.println(listMode);
 		for(int i = Q1; i <= Q2 ; i++) {
+			List<Inputs> list = new ArrayList<>(listPages);
 			Algorithms fifo = new Algorithms(i);
 			Algorithms mru = new Algorithms(i);
 			Algorithms sc = new Algorithms(i);
 			Algorithms nru = new Algorithms(i);
 			Algorithms opt = new Algorithms(i);
-			chartPointsFIFO.add(new ChartPoint(i, fifo.FIFO(listPages)));
-			chartPointsMRU.add(new ChartPoint(i, mru.MRU(listPages)));
-			chartPointsSC.add(new ChartPoint(i, sc.secondChance(listPages, numReferences)));
-			chartPointsNRU.add(new ChartPoint(i, nru.nru(listPages, listMode, numReferences)));
-			chartPointsOPT.add(new ChartPoint(i, opt.optimum(listPages)));
+			chartPointsFIFO.add(new ChartPoint(i, fifo.FIFO(list)));
+			chartPointsMRU.add(new ChartPoint(i, mru.MRU(list)));
+			chartPointsSC.add(new ChartPoint(i, sc.secondChance(list, numReferences)));
+			chartPointsNRU.add(new ChartPoint(i, nru.nru(list, listMode, numReferences)));
+			chartPointsOPT.add(new ChartPoint(i, opt.optimum(list)));
 		}
 
 		GenerateTable table = new GenerateTable(Q2 - Q1, Q1, chartPointsFIFO, chartPointsMRU, chartPointsSC, chartPointsNRU, chartPointsOPT);
