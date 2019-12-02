@@ -75,10 +75,14 @@ public class GenerateChart extends ApplicationFrame {
         XYSeries series1 = new XYSeries("FIFO");
         XYSeries series2 = new XYSeries("MRU");
         XYSeries series3 = new XYSeries("Segunda Chance");
+        XYSeries series4 = new XYSeries("NRU");
+        XYSeries series5 = new XYSeries("Ótimo");
         ArrayList<XYSeries> series = new ArrayList<>();
         series.add(series1);
         series.add(series2);
         series.add(series3);
+        series.add(series4);
+        series.add(series5);
         int i = 0;
         for(ArrayList line: chartPoints){
             ArrayList<ChartPoint> line1 = line;
@@ -91,6 +95,8 @@ public class GenerateChart extends ApplicationFrame {
         dataset.addSeries(series1);
         dataset.addSeries(series2);
         dataset.addSeries(series3);
+        dataset.addSeries(series4);
+        dataset.addSeries(series5);
 
         return dataset;
 

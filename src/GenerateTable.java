@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class GenerateTable {
 
     public GenerateTable(int interval, int Q1, ArrayList<ChartPoint> chartPointsFIFO, ArrayList<ChartPoint> chartPointsMRU,
-                         ArrayList<ChartPoint> chartPointsSC)
+                         ArrayList<ChartPoint> chartPointsSC, ArrayList<ChartPoint> chartPointsNRU, ArrayList<ChartPoint> chartPointsOPT)
     {
         Object[] columnNames = { "Quantidade de frames", "FIFO", "MRU", "Segunda chance", "NRU", "Ótimo"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
@@ -19,7 +19,9 @@ public class GenerateTable {
             int fifo = chartPointsFIFO.get(i).getNumHits();
             int mru = chartPointsMRU.get(i).getNumHits();
             int sc = chartPointsSC.get(i).getNumHits();
-            Object[] data = { Q1 + i, fifo, mru, sc};
+            int nru = chartPointsNRU.get(i).getNumHits();
+            int opt = chartPointsOPT.get(i).getNumHits();
+            Object[] data = { Q1 + i, fifo, mru, sc, nru, opt};
             tableModel.addRow(data);
 
         }

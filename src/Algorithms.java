@@ -17,7 +17,6 @@ public class Algorithms {
 
 
     public int FIFO(List<Inputs> list){
-        int insert = 0;
         this.frames = new ArrayList<>();
 
         //  percorre toda a lista de números das páginas
@@ -36,19 +35,15 @@ public class Algorithms {
                 }
                 // se não, remove a primeira página da fila
                 else {
-                    frames.remove(insert);
-                    frames.add(insert, numPage);
-                    insert++;
+                    frames.remove(0);
+                    frames.add(numPage);
                     numMisses++;
-                    if (insert == numFrames) {
-                        insert = 0;
-                    }
                 }
             }else
                 numHits++;
         }
         System.out.print("FIFO: Misses -> " + numMisses + " | Hits -> " + numHits);
-        System.out.println(" | Frames -> " + frames);
+        System.out.println(" | Fila -> " + frames);
         return numHits;
     }
 
@@ -85,15 +80,12 @@ public class Algorithms {
                 // se não, carrega a página i
                 if (queue.size() != numFrames){
                     numMisses++;
-                    //queue.add(top,input);
                     queue.add(input);
                 }
 
                 // se sim, remove o item zero da fila e carrega a página i
                 else {
                     numMisses++;
-                    //queue.remove(base);
-                    //queue.add(top,input);
                     queue.remove(0);
                     queue.add(input);
                 }
@@ -106,198 +98,118 @@ public class Algorithms {
     }
 
 
-    /*public void nru(BufferedReader br) throws IOException {
-        Page[] table = new Page[numframes];
-        int count = 0;
+    public int nru(List<Inputs> list, List<Character> mode, int numReferences){
+        this.frames = new ArrayList<>();
 
-        String st;
-        while ((st = br.readLine()) != null) {
-
-            String addr = st.substring(0, 5);
-            String action = st.substring(9, 10);
-
-            if(count < numframes) {
-                boolean nofault = false;
-                for(int i = 0; i < count; i++) {
-                    if(table[i].addr.equals(addr)) {
-                        nofault = true;
-                        System.out.println("hit");
-                        if(action.equals("W"))
-                            table[i].dirty = 1;
-                        else
-                            table[i].bit = 1;
-                    }
-                }
-                if(!nofault) {
-                    if(action.equals("W")) {
-                        table[count] = new Page(addr, 1, 1);
-                        System.out.println("page fault - evict dirty");
-                    }
-                    else {
-                        table[count] = new Page(addr, 1, 0);
-                        System.out.println("page fault - evict clean");
-                    }
-                    count++;
-
-                    pagefaults++;
+        //  percorre toda a lista de números das páginas
+        for(int i = 0; i < list.size(); i++) {
+            // verifica se chegou na zerésima página
+            if (i % numReferences == 0) {
+                for (Inputs frame : frames) {
+                    frame.setBitR(false);
                 }
             }
 
-            else {
-                boolean nofault = false;
-                for(Page p : table) {
-                    if(p.addr.equals(addr)) {
-                        System.out.println("hit");
-                        nofault = true;
-                        if(action.equals("W"))
-                            p.dirty = 1;
-                        else
-                            p.bit = 1;
-                        break;
-                    }
+            Inputs numPage = list.get(i);
+            boolean found = false;
+            //  verifica se é operação de escrita
+            if (mode.get(i) == 'W') {
+                numPage.setBitM(true);
+            }
 
-                }
 
-                if(!nofault) {
-                    boolean replaced = false;
-                    int second = -1;
-                    int third = -1;
-                    for(int i = 0; i < table.length; i++) {
-                        if(table[i].bit == 0 && table[i].dirty == 0) {
-                            if(action.equals("W"))
-                                table[i] = new Page(addr, 1, 1);
-                            else
-                                table[i] = new Page(addr, 1, 0);
-                            replaced = true;
-                            System.out.println("page fault - evict clean");
-                            pagefaults++;
-                            break;
-                        }
-                        else if(table[i].bit == 0 && table[i].dirty == 1)
-                            second = i;
-
-                        else if(table[i].bit == 1 && table[i].dirty == 0)
-                            third = i;
-                    }
-                    if(!replaced) {
-                        int index;
-
-                        if(second > -1) {
-                            index = second;
-                            System.out.println("page fault - evict dirty");
-                        }
-                        else if(third > -1) {
-                            index = third;
-                            System.out.println("page fault - evict clean");
-                        }
-                        else {
-                            index = 0;
-                            System.out.println("page fault - evict dirty");
-
-                        }
-
-                        if(action.equals("W"))
-                            table[index] = new Page(addr, 1, 1);
-                        else
-                            table[index] = new Page(addr, 1, 0);
-
-                        pagefaults++;
-                    }
+            //  verifica se a página está carregada em algum frame
+            for (int j = 0; j < frames.size(); j++) {
+                if ((frames.get(j).getValor() == numPage.getValor())) {
+                    found = true;
+                    break;
                 }
             }
 
-            if(action.equals("W"))
-                writes++;
-            memaccess++;
-
-            if(refresh % memaccess == 0) {
-                for(int i = 0; i < count; i++) {
-                    table[i].bit = 0;
+            //  se não estiver carregado
+            if (!found) {
+                // verifica se todos os frames já foram carregados
+                // se sim, carrega a página sem ocorrer remoção
+                if (frames.size() < numFrames) {
+                    frames.add(numPage);
+                    numMisses++;
+                    continue;
                 }
-            }
-        }
-    }*/
-
-    /*public void opt(BufferedReader br) throws IOException {
-        ArrayList<String> table = new ArrayList<>();
-        ArrayList<String> mem = new ArrayList<>();
-        BufferedReader second = new BufferedReader(new FileReader(trace));
-        try {
-            second = new BufferedReader(new FileReader(trace));
-        } catch (IOException f) {
-            System.out.println("Trace File Not Found");
-        }
-
-
-        String memString;
-        while ((memString = second.readLine()) != null) {
-            String addr = memString.substring(0, 5);
-            mem.add(addr);
-        }
-
-        second.close();
-
-
-        String st;
-        while ((st = br.readLine()) != null) {
-            String addr = st.substring(0, 5);
-            String action = st.substring(9, 10);
-
-            if(!table.contains(addr)) {
-                if(table.size() < numframes){
-                    System.out.println("page fault - no eviction");
-                    pagefaults++;
-                    table.add(addr);
-                } else {
-                    System.out.println("page fault - eviction");
-                    pagefaults++;
-
-                    int[] index = new int[numframes];
-
-                    mem.remove(0);
-
-                    for(int i = 0; i < numframes; i++){
-                        index[i] = mem.indexOf(table.get(i));
-                    }
-
-                    int max = -1;
-                    int maxIndex = 0;
-
-                    int replace = -1;
-
-
-                    for(int i = 0; i < numframes; i++) {
-                        if(index[i] > max) {
-                            max = index[i];
-                            maxIndex = i;
+                //  se não, remove a primeira página da fila
+                //  que tiver o bitR igual a zero
+                else {
+                    Inputs frameOut = frames.get(0);
+                    int index = 0;
+                    for (Inputs frame : frames) {
+                        if (frame.getClasse() < frameOut.getClasse()) {
+                            index = frames.indexOf(frame);
                         }
-                        if(index[i] == 0)
-                            replace = i;
                     }
-
-                    if(replace != -1) {
-                        table.remove(replace);
-                        table.add(replace, addr);
-                    }
-
-                    else if(max == -1) {
-                        table.remove(0);
-                        table.add(maxIndex, addr);
-
-                    }
-                    else {
-                        table.remove(maxIndex);
-                        table.add(maxIndex, addr);
-                    }
+                    frames.remove(index);
+                    frames.add(numPage);
+                    numMisses++;
                 }
+                // se a página já estiver carregada
             }
             else
-                System.out.println("hit");
-            if(action.equals("W"))
-                writes++;
-            memaccess++;
+                numHits++;
         }
-    }*/
+        System.out.print("NRU: Misses -> " + numMisses + " | Hits -> " + numHits);
+        System.out.println(" | Fila -> " + frames);
+        return numHits;
+    }
+
+    public int optimum (List<Inputs> list) {
+
+        int max_index = 0,  j = 0, lenghList = 0, frame_index = 0;
+
+        this.frames = new ArrayList<>();
+        lenghList = list.size();
+        for (int i = 0; i < lenghList; i++) {
+
+            Inputs numPage = list.get(0);
+            list.remove(0);
+
+            //  verifica se a página está carregada em algum frame
+            if (!frames.contains(numPage)) {
+
+                // verifica se todos os frames já foram carregados
+                // se não, carrega a página sem ocorrer remoção
+                if (frames.size() < numFrames) {
+                    frames.add(numPage);
+                    numMisses++;
+                    continue;
+                }
+
+                // se sim, libera o frame que contém a
+                // página que será usada mais tardiamente referenciada
+                else{
+                    max_index = -1;
+                    for(j = 0; j < frames.size(); j++){
+                        int indexPage = list.indexOf(frames.get(j));
+                        if(indexPage == -1){
+                            frame_index = j;
+                            break;
+                        }
+                        if(indexPage > max_index){
+                            frame_index = j;
+                            max_index = indexPage;
+                        }
+                    }
+                    frames.set(frame_index, numPage);
+                    numMisses++;
+                }
+
+            } else
+                numHits++;
+        }
+        System.out.print("OPT: Misses -> " + numMisses + " | Hits -> " + numHits);
+        System.out.println(" | Frames -> " + frames);
+        return numHits;
+    }
+
+
+
 
     public int secondChance(List<Inputs> list, int numReferences) {
         this.frames = new ArrayList<>();

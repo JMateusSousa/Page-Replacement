@@ -18,6 +18,8 @@ public class Main {
 		ArrayList<ChartPoint> chartPointsFIFO = new ArrayList<>();
 		ArrayList<ChartPoint> chartPointsMRU = new ArrayList<>();
 		ArrayList<ChartPoint> chartPointsSC = new ArrayList<>();
+		ArrayList<ChartPoint> chartPointsNRU = new ArrayList<>();
+		ArrayList<ChartPoint> chartPointsOPT = new ArrayList<>();
 
 		try {
 			Scanner inputPrompt = new Scanner(new InputStreamReader(System.in));
@@ -34,7 +36,7 @@ public class Main {
 					mode = page.substring(page.length() - 1);
 					page = page.substring(0, page.length() - 1);
 					listPages.add(new Inputs(Integer.parseInt(page)));
-					listMode.add(mode);
+					listMode.add(mode.charAt(0));
 				}
 				else {
 					break;
@@ -51,15 +53,21 @@ public class Main {
 			Algorithms fifo = new Algorithms(i);
 			Algorithms mru = new Algorithms(i);
 			Algorithms sc = new Algorithms(i);
+			Algorithms nru = new Algorithms(i);
+			Algorithms opt = new Algorithms(i);
 			chartPointsFIFO.add(new ChartPoint(i, fifo.FIFO(listPages)));
 			chartPointsMRU.add(new ChartPoint(i, mru.MRU(listPages)));
 			chartPointsSC.add(new ChartPoint(i, sc.secondChance(listPages, numReferences)));
+			chartPointsNRU.add(new ChartPoint(i, nru.nru(listPages, listMode, numReferences)));
+			chartPointsOPT.add(new ChartPoint(i, opt.optimum(listPages)));
 		}
 
-		GenerateTable table = new GenerateTable(Q2 - Q1, Q1, chartPointsFIFO, chartPointsMRU, chartPointsSC);
+		GenerateTable table = new GenerateTable(Q2 - Q1, Q1, chartPointsFIFO, chartPointsMRU, chartPointsSC, chartPointsNRU, chartPointsOPT);
 		chartPoints.add(chartPointsFIFO);
 		chartPoints.add(chartPointsMRU);
 		chartPoints.add(chartPointsSC);
+		chartPoints.add(chartPointsNRU);
+		chartPoints.add(chartPointsOPT);
 		GenerateChart chart = new GenerateChart("Algoritmos de substituição de páginas", chartPoints);
 		chart.pack();
 		RefineryUtilities.centerFrameOnScreen(chart);

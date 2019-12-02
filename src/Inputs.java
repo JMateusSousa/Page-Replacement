@@ -1,8 +1,17 @@
 public class Inputs {
 
 	private int valor;
+	private char classe;
 	private boolean bitR = true;
-	private boolean mode;
+	private boolean bitM = false;
+
+	public Inputs(int valor){
+		this.valor = valor;
+	}
+
+	public int getValor(){
+		return valor;
+	}
 
 	public boolean isBitR() {
 		return bitR;
@@ -12,31 +21,31 @@ public class Inputs {
 		this.bitR = bitR;
 	}
 
-	public boolean isMode() {
-		return mode;
+	public boolean isBitM() {
+		return bitM;
 	}
 
-	public void setMode(boolean mode) {
-		this.mode = mode;
+	public void setBitM(boolean bitM) {
+		this.bitM = bitM;
 	}
 
-	public Inputs(int valor){
-
-		this.valor = valor;
-	}
-
-	public void setValor(int valor){
-
-		this.valor = valor;
-	}
-	
-	public int getValor(){
-
-		return valor;
+	public char getClasse(){
+		if(this.bitR == false && this.bitM == false){
+			this.classe = 0;
+		}
+		else if(this.bitR == false && this.bitM == true){
+			this.classe = 1;
+		}
+		else if(this.bitR == true && this.bitM == false){
+			this.classe = 2;
+		}
+		else if(this.bitR == true && this.bitM == true){
+			this.classe = 3;
+		}
+		return this.classe;
 	}
 
 	public boolean equals(Object o){
-
 		return ((Inputs)o).getValor() == this.valor;
 	}
 
